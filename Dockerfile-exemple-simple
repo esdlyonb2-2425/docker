@@ -1,0 +1,25 @@
+FROM php:8.3-apache
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy index.php
+COPY index.php /var/www/html/index.php
+
+# Apache configuration (optional, but recommended)
+RUN echo "<VirtualHost *:80>\n \
+    DocumentRoot /var/www/html\n \
+    <Directory /var/www/html>\n \
+        Options Indexes FollowSymLinks\n \
+        AllowOverride All\n \
+        Require all granted\n \
+    </Directory>\n \
+    ErrorLog /var/log/apache2/error.log\n \
+    CustomLog /var/log/apache2/access.log combined\n \
+</VirtualHost>" > /etc/apache2/sites-available/000-default.conf
+
+# Expose port 80
+EXPOSE 80
+
+# Start Apache in foreground
+CMD ["apache2-foreground"]
